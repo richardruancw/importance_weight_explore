@@ -54,6 +54,15 @@ def progress_plot(X, y,
     pos_cord, neg_cord = split_cord(X, y)
     xx, yy = np.meshgrid(x_span, y_span)
     for i, ax in enumerate(axes):          
+        if deep_results is not None:
+            z, margin, support_vector, target_vector, df = deep_results[i]
+            zt = z > 0
+            ax.plot([support_vector[0]], [support_vector[1]], marker='o', markersize=4, color="red")
+            if target_vector is not None:
+                ax.plot([target_vector[0]], [target_vector[1]], marker='o', markersize=4, color="yellow")
+            if df is not None:
+                ax.plot(df[:, 0], df[:, 1], color="grey")
+            ax.contourf(xx, yy, zt, cmap=cmap, alpha=0.5)  
         ax.scatter(pos_cord[:, 0], pos_cord[:, 1], alpha=0.9)
         ax.scatter(neg_cord[:, 0], neg_cord[:, 1], alpha=0.9)
         ax.set_ylim(min(y_span),  max(y_span))
@@ -64,17 +73,6 @@ def progress_plot(X, y,
             slope = -1 * weight[1] /  weight[0]
             lg_y = slope * x_span + bias
             ax.plot(x_span, lg_y)
-            
-        if deep_results is not None:
-            z, margin, support_vector, target_vector, df = deep_results[i]
-            zt = z > 0
-            ax.plot([support_vector[0]], [support_vector[1]], marker='o', markersize=4, color="red")
-            if target_vector is not None:
-                ax.plot([target_vector[0]], [target_vector[1]], marker='o', markersize=4, color="yellow")
-            if df is not None:
-                ax.plot(df[:, 0], df[:, 1], color="grey")
-            ax.contourf(xx, yy, zt, cmap=cmap, alpha=0.5)    
-            
         
         if margins:
             ax.plot(margins[0], margins[1])
