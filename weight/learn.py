@@ -99,7 +99,7 @@ def run_non_linear(X, y, sample_weight, lr, milestones = (1, 10, 100, 500, 1500)
     
     if model is None:
         model = tf.keras.Sequential([
-            tf.keras.layers.Dense(units=5, use_bias=True,
+            tf.keras.layers.Dense(units=64, use_bias=True,
                 activation=tf.keras.activations.relu,
                 kernel_regularizer=tf.keras.regularizers.l1_l2(l2=l2, l1=0),
                 bias_regularizer=tf.keras.regularizers.l2(l2)),

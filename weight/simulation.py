@@ -18,7 +18,7 @@ def lin_sep(dis2origin=Config.dis2origin, axis_limit=Config.axis_limit, size=Con
 
     neg_cord = -1 * pos_cord
     X = np.vstack([pos_cord, neg_cord]).astype(np.float32)
-    X = (X) / X.std(0)[np.newaxis, :]
+    X = (X - X.mean(0)[np.newaxis, :]) / X.std(0)[np.newaxis, :]
     y = np.concatenate([np.ones(pos_size), np.zeros(pos_size)], axis=0)
     return X, y
 
@@ -30,7 +30,10 @@ def non_lin_sep(dis2origin=Config.dis2origin, axis_limit=Config.axis_limit, size
     x *= 1.5
     sx *= 0.5
     sy = 1 - sy #this flip the data
-    return np.concatenate([x, sx], axis=0), np.concatenate([y, sy], axis=0)
+    X = np.concatenate([x, sx], axis=0)
+    y = np.concatenate([y, sy], axis=0)
+    X = (X - X.mean(0)[np.newaxis, :]) / X.std(0)[np.newaxis, :]
+    return X, y
 
 
 def non_lin_moon(noise=0.05):
@@ -39,4 +42,5 @@ def non_lin_moon(noise=0.05):
     # Increase the gap
     X[y > 0, 1] -= 0.15
     X[y <= 0, 1] += 0.15
+    X = (X - X.mean(0)[np.newaxis, :]) / X.std(0)[np.newaxis, :]
     return X, y
