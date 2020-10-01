@@ -31,10 +31,10 @@ def get_linear_margin(X, y, xx, yy, lin_results):
 def get_model_norm(model):
     norm = 0
     for weight in model.weights:
-        if isinstance(weight, np.ndarray):
-            norm += np.linalg.norm(weight)
-        else:
-            norm += np.linalg.norm(weight.numpy())
+        if not isinstance(weight, np.ndarray):
+            weight = weight.numpy()
+        norm += np.linalg.norm(weight)
+    norm = np.sqrt(norm)
     return norm
 
 def extract_margin(X, y, xx, yy, model):

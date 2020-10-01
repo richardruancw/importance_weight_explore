@@ -20,7 +20,7 @@ def lin_sep(dis2origin=Config.dis2origin, axis_limit=Config.axis_limit, size=Con
     X = np.vstack([pos_cord, neg_cord]).astype(np.float32)
     X = (X - X.mean(0)[np.newaxis, :]) / X.std(0)[np.newaxis, :]
     y = np.concatenate([np.ones(pos_size), np.zeros(pos_size)], axis=0)
-    return X, y
+    return X.astype(np.float32), y
 
 
 def non_lin_sep(dis2origin=Config.dis2origin, axis_limit=Config.axis_limit, size=Config.size):
@@ -33,14 +33,14 @@ def non_lin_sep(dis2origin=Config.dis2origin, axis_limit=Config.axis_limit, size
     X = np.concatenate([x, sx], axis=0)
     y = np.concatenate([y, sy], axis=0)
     X = (X - X.mean(0)[np.newaxis, :]) / X.std(0)[np.newaxis, :]
-    return X, y
+    return X.astype(np.float32), y
 
 
-def non_lin_moon(noise=0.05):
+def non_lin_moon(size=Config.size, noise=0.05):
     """Create moon shaped non-separable data"""
-    X, y = datasets.make_moons(n_samples=Config.size, noise=noise)
+    X, y = datasets.make_moons(n_samples=size, noise=noise)
     # Increase the gap
     X[y > 0, 1] -= 0.15
     X[y <= 0, 1] += 0.15
     X = (X - X.mean(0)[np.newaxis, :]) / X.std(0)[np.newaxis, :]
-    return X, y
+    return X.astype(np.float32), y
