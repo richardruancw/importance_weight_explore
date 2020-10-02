@@ -97,10 +97,16 @@ def progress_plot(X, y,
         ax.set_xlim(min(x_span), max(x_span))
         
         if lin_results is not None:
-            weight, bias = lin_results[i]
-            slope = -1 * weight[1] /  weight[0]
-            lg_y = slope * x_span + bias
-            ax.plot(x_span, lg_y)
+            if isinstance(lin_results[i], list):
+                for weight, bias in lin_results[i]:
+                    slope = -1 * weight[1] /  weight[0]
+                    lg_y = slope * x_span + bias
+                    ax.plot(x_span, lg_y)
+            else:
+                weight, bias = lin_results[i]
+                slope = -1 * weight[1] /  weight[0]
+                lg_y = slope * x_span + bias
+                ax.plot(x_span, lg_y)
         
         if margins:
             ax.plot(margins[0], margins[1])
@@ -113,3 +119,23 @@ def progress_plot(X, y,
                 ax.plot(df[:, 0], df[:, 1], color="yellow")
         ax.set_aspect('equal', adjustable='box')
     plt.plot()
+
+
+
+
+
+
+def fitted_plot(ax, x_span, y_span, z, X, y, curve):
+    xx, yy = np.meshgrid(x_span, y_span)
+    zt = z > 0
+    pos_cord, neg_cord = split_cord(X, y)
+    ax.contourf(xx, yy, zt, cmap='Paired', alpha=0.5)  
+    ax.scatter(pos_cord[:, 0], pos_cord[:, 1], alpha=0.9)
+    ax.scatter(neg_cord[:, 0], neg_cord[:, 1], alpha=0.9)
+    ax.set_ylim(min(y_span),  max(y_span))
+    ax.set_xlim(min(x_span), max(x_span))
+
+    weight, bias = curve
+    slope = -1 * weight[1] /  weight[0]
+    lg_y = slope * x_span + bias
+    ax.plot(x_span, lg_y, color='black')
